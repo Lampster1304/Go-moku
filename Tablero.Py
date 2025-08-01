@@ -2,9 +2,9 @@ import numpy as np
 from referencia import VACIO, NEGRO, BLANCO, SIMBOLOS
 
 class Tablero:
-    def __init__(self, tamaño=15):
-        self.tamaño = tamaño
-        self.grid = np.full((tamaño, tamaño), VACIO)
+    def __init__(self, tamanio=15):
+        self.tamanio = tamanio
+        self.grid = np.full((tamanio, tamanio), VACIO)
 
     def colocar_piedra(self, fila, columna, jugador):
         if self.grid[fila, columna] == VACIO:
@@ -13,13 +13,13 @@ class Tablero:
         return False
 
     def obtener_movimientos_validos(self):
-        return [(r, c) for r in range(self.tamaño) for c in range(self.tamaño) if self.grid[r, c] == VACIO]
+        return [(r, c) for r in range(self.tamanio) for c in range(self.tamanio) if self.grid[r, c] == VACIO]
 
     def esta_lleno(self):
         return not (self.grid == VACIO).any()
 
     def mostrar(self):
-        print("\n    " + "".join(f"{i:2}" for i in range(self.tamaño)))
+        print("\n    " + "".join(f"{i:2}" for i in range(self.tamanio)))
         for i, fila in enumerate(self.grid):
             fila_str = "".join(SIMBOLOS[c] for c in fila)
             print(f"{i:2} {fila_str}")
@@ -31,15 +31,15 @@ class Tablero:
 
     def verificar_ganador(self, jugador):
         direcciones = [(1, 0), (0, 1), (1, 1), (1, -1)]
-        for fila in range(self.tamaño):
-            for col in range(self.tamaño):
+        for fila in range(self.tamanio):
+            for col in range(self.tamanio):
                 if self.grid[fila, col] != jugador:
                     continue
                 for dr, dc in direcciones:
                     conteo = 0
                     for i in range(5):
                         r, c = fila + i * dr, col + i * dc
-                        if 0 <= r < self.tamaño and 0 <= c < self.tamaño and self.grid[r, c] == jugador:
+                        if 0 <= r < self.tamanio and 0 <= c < self.tamanio and self.grid[r, c] == jugador:
                             conteo += 1
                         else:
                             break

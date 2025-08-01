@@ -9,20 +9,28 @@ class JugadorMinimax:
         self.oponente = BLANCO if color == NEGRO else NEGRO
 
     def obtener_mejor_movimiento(self, tablero: Tablero):
+        print("Minimax con poda está calculando movimiento...")
+
         mejor_valor = float('-inf')
         mejor_movimiento = None
+        alfa = float('-inf')
+        beta = float('inf')
 
         for fila, col in tablero.obtener_movimientos_validos():
             tablero_copia = copy.deepcopy(tablero)
             tablero_copia.colocar_piedra(fila, col, self.color)
-            valor = self.minimax(tablero_copia, self.profundidad -1, False)
+            valor = self.minimax(tablero_copia, self.profundidad - 1, False, alfa, beta)
+
             if valor > mejor_valor:
                 mejor_valor = valor
                 mejor_movimiento = (fila, col)
 
+            alfa = max(alfa, mejor_valor)
+
+        print("Mejor movimiento elegido:", mejor_movimiento)
         return mejor_movimiento
 
-    def minimax(self, tablero, profundidad, es_maximizador):
+    def minimax(self, tablero, profundidad, es_maximizador, alfa, beta):
         if tablero.verificar_ganador(self.color):
             return 10
         elif tablero.verificar_ganador(self.oponente):
@@ -35,14 +43,23 @@ class JugadorMinimax:
             for fila, col in tablero.obtener_movimientos_validos():
                 tablero_copia = copy.deepcopy(tablero)
                 tablero_copia.colocar_piedra(fila, col, self.color)
-                valor = self.minimax(tablero_copia, profundidad - 1, False)
+                valor = self.minimax(tablero_copia, profundidad - 1, False, alfa, beta)
                 mejor_valor = max(mejor_valor, valor)
+                alfa = max(alfa, valor)
+                if beta <= alfa:
+                    break  # Poda beta
             return mejor_valor
         else:
             mejor_valor = float('inf')
             for fila, col in tablero.obtener_movimientos_validos():
                 tablero_copia = copy.deepcopy(tablero)
                 tablero_copia.colocar_piedra(fila, col, self.oponente)
-                valor = self.minimax(tablero_copia, profundidad - 1, True)
+                valor = self.minimax(tablero_copia, profundidad - 1, True, alfa, beta)
                 mejor_valor = min(mejor_valor, valor)
+                beta = min(beta, valor)
+                if beta <= alfa:
+                    break  # Poda alfa
             return mejor_valor
+
+    def obtener_movimiento(self, tablero: Tablero):
+        return self.obtener_mejor_movimiento(tablero)

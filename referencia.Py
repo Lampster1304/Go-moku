@@ -4,6 +4,6 @@ BLANCO = 2
 
 SIMBOLOS = {
     VACIO: "🟫",
-    NEGRO: "⚫",
-    BLANCO: "⚪"
+    NEGRO: "⚪",
+    BLANCO: "⚫"
 }

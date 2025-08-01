@@ -5,42 +5,49 @@ def evaluar_tablero(tablero, jugador_color):
     oponente_color = '⚪' if jugador_color == '⚫' else '⚫'
 
     # Evaluar filas
-    for fila in tablero.tablero:
+    for fila in tablero.grid:
         puntuacion += evaluar_linea(fila, jugador_color, oponente_color)
 
     # Evaluar columnas
-    for col in zip(*tablero.tablero):
+    for col in zip(*tablero.grid):
         puntuacion += evaluar_linea(col, jugador_color, oponente_color)
 
     # Evaluar diagonales
-    puntuacion += evaluar_diagonales(tablero.tablero, jugador_color, oponente_color)
+    puntuacion += evaluar_diagonales(tablero.grid, jugador_color, oponente_color)
 
     return puntuacion
 
 def evaluar_linea(linea, jugador, oponente):
     puntuacion = 0
-    linea_str = ''.join(linea)
+    longitud = len(linea)
 
-    patrones = [
-        (jugador * 5, 100000),  # Victoria
-        (jugador * 4 + VACIO, 1000),
-        (VACIO + jugador * 4, 1000),
-        (jugador * 3 + VACIO, 100),
-        (VACIO + jugador * 3, 100),
-        (jugador * 2 + VACIO, 10),
-        (VACIO + jugador * 2, 10),
+    jugador = str(jugador)
+    oponente = str(oponente)
+    VACIO_STR = str(VACIO)
 
-        (oponente * 5, -100000),  # Derrota
-        (oponente * 4 + VACIO, -1000),
-        (VACIO + oponente * 4, -1000),
-        (oponente * 3 + VACIO, -100),
-        (VACIO + oponente * 3, -100),
-        (oponente * 2 + VACIO, -10),
-        (VACIO + oponente * 2, -10),
-    ]
+    for i in range(longitud - 4):
+        ventana = linea[i:i + 5]
+        ventana_str = ''.join(str(celda) for celda in ventana)
 
-    for patron, valor in patrones:
-        puntuacion += linea_str.count(patron) * valor
+        # Ataque (jugador)
+        if ventana_str.count(jugador) == 5:
+            puntuacion += 100000
+        elif ventana_str.count(jugador) == 4 and ventana_str.count(VACIO_STR) == 1:
+            puntuacion += 5000
+        elif ventana_str.count(jugador) == 3 and ventana_str.count(VACIO_STR) == 2:
+            puntuacion += 300
+        elif ventana_str.count(jugador) == 2 and ventana_str.count(VACIO_STR) == 3:
+            puntuacion += 30
+
+        # Defensa (oponente)
+        if ventana_str.count(oponente) == 5:
+            puntuacion -= 100000
+        elif ventana_str.count(oponente) == 4 and ventana_str.count(VACIO_STR) == 1:
+            puntuacion -= 90000  # Muy alta para obligar a defender
+        elif ventana_str.count(oponente) == 3 and ventana_str.count(VACIO_STR) == 2:
+            puntuacion -= 500
+        elif ventana_str.count(oponente) == 2 and ventana_str.count(VACIO_STR) == 3:
+            puntuacion -= 50
 
     return puntuacion
 
