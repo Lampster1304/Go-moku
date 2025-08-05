@@ -1,4 +1,3 @@
-# MenuInteractivo.py
 import os
 import msvcrt
 from colorama import init, Fore, Style
@@ -22,6 +21,7 @@ opciones = [
     "                                               ·IA Minimax vs IA Mala",
     "                                               ·IA Minimax vs IA Random",
     "                                               ·IA Minimax vs IA Minimax",
+    "                                               ·Historial de partidas",
     "                                               ·Salir"
 ]
 
@@ -30,7 +30,7 @@ def limpiar_pantalla():
 
 def leer_tecla():
     tecla = msvcrt.getch()
-    if tecla == b'\x00' or tecla == b'\xe0':  # Teclas especiales (flechas)
+    if tecla == b'\x00' or tecla == b'\xe0': 
         tecla2 = msvcrt.getch()
         teclas = {b'H': "UP", b'P': "DOWN"}
         return teclas.get(tecla2, None)
@@ -43,15 +43,12 @@ def mostrar_menu_interactivo():
     ancho_centrado = 80
     while True:
         limpiar_pantalla()
-        # Título en azul y centrado
         print("\n" + Fore.LIGHTBLUE_EX + titulo.center(ancho_centrado))
 
         for i, opcion in enumerate(opciones):
             if i == seleccion:
-                # Seleccionado en verde brillante centrado
                 print(Fore.LIGHTGREEN_EX + Style.BRIGHT + f"{opcion}".center(ancho_centrado) + Style.RESET_ALL)
             else:
-                # Opciones normales en azul centrado
                 print(Fore.LIGHTBLUE_EX + f"  {opcion}".center(ancho_centrado) + Style.RESET_ALL)
 
         print(Fore.LIGHTBLUE_EX + "\n\n\n\n                                     Usa las flechas ↑ ↓ para moverte y ENTER para seleccionar:\n".center(ancho_centrado))
@@ -63,6 +60,5 @@ def mostrar_menu_interactivo():
         elif tecla == "ENTER":
             return seleccion + 1
 
-# Solo se ejecuta si corres directamente este archivo
 if __name__ == "__main__":
     mostrar_menu_interactivo()

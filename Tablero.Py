@@ -63,14 +63,10 @@ class Tablero:
                         return True
         return False
 
-# Dentro de Tablero.py
-
     def hay_ganador(self):
-        # Verifica si alguno de los dos jugadores ha ganado
         return self.verificar_ganador(NEGRO) or self.verificar_ganador(BLANCO)
 
     def colocar(self, fila, col, jugador):
-        # Igual que colocar_piedra pero sin chequeo
         self.grid[fila, col] = jugador
 
     def deshacer(self, fila, col):

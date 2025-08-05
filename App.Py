@@ -1,10 +1,6 @@
 from Movimiento import Movimiento
-from Jugadores.Humano import Humano
-from Jugadores.Minimax import JugadorMinimax
-from Jugadores.Greedy import JugadorGreedy
-from Jugadores.Mala import JugadorMalo
-from Jugadores.Random import JugadorRandom
 from Menu_interactivo import mostrar_menu_interactivo
+from historial import mostrar_historial
 
 def ejecutar_modo(modo):
     if modo == 1:
@@ -28,8 +24,10 @@ def ejecutar_modo(modo):
 if __name__ == "__main__":
     while True:
         opcion = mostrar_menu_interactivo()
-        if opcion == 7:  # Salir
+        if opcion == 8: 
             print("\nGracias por jugar. ¡Hasta la próxima!\n")
             break
-        ejecutar_modo(opcion)
-
+        elif opcion == 7:
+            mostrar_historial()
+        else:
+            ejecutar_modo(opcion)

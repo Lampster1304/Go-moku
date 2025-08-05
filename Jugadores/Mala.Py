@@ -1,5 +1,3 @@
-
-
 from Movimiento import Movimiento
 from referencia import VACIO
 from heuristicas.Heuristicas_set import evaluar_tablero_malo
@@ -21,7 +19,7 @@ class JugadorMalo:
 
             if puntuacion > peor_puntuacion:
                 peor_puntuacion = puntuacion
-                peor_movimiento = (fila, columna)  # <-- CORRECCIÓN AQUÍ
+                peor_movimiento = (fila, columna) 
 
         return peor_movimiento
 

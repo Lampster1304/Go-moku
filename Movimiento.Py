@@ -3,6 +3,7 @@ import os
 import time
 from referencia import VACIO, NEGRO, BLANCO, SIMBOLOS
 from Tablero import Tablero
+from historial import guardar_en_historial
 
 class Movimiento:
     def __init__(self, modo="HH"):
@@ -49,6 +50,7 @@ class Movimiento:
             self.jugador1 = JugadorMinimax(NEGRO)
             self.jugador2 = JugadorMinimax(BLANCO)
 
+
     def limpiar_pantalla(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -81,7 +83,7 @@ class Movimiento:
 
     def leer_tecla(self):
         tecla = msvcrt.getch()
-        if tecla == b'\x00':  # Teclas especiales
+        if tecla == b'\x00': 
             tecla2 = msvcrt.getch()
             teclas = {b'H': "UP", b'P': "DOWN", b'K': "LEFT", b'M': "RIGHT"}
             return teclas.get(tecla2, None)
@@ -115,11 +117,16 @@ class Movimiento:
             self.mostrar_tablero()
             ganador = "⚪ Blanco" if self.jugador_actual == NEGRO else "⚫ Negro"
             print(f"¡{ganador} gana!")
+
+            guardar_en_historial(self.jugador_actual, ganador)
+
             self.running = False
+            time.sleep(3)
         elif self.tablero.esta_lleno():
             self.mostrar_tablero()
             print("¡Empate! El tablero está lleno.")
             self.running = False
+            time.sleep(3)
         else:
             self.jugador_actual = BLANCO if self.jugador_actual == NEGRO else NEGRO
         return True
@@ -137,10 +144,14 @@ class Movimiento:
                     self.colocar_pieza_humano()
                 elif tecla == "Q":
                     print("Juego terminado por el jugador.")
+                    print("\n\nPresiona una tecla para continuar...")
+                    msvcrt.getch()
                     break
             else:
                 movimiento = jugador.obtener_movimiento(self.tablero)
                 if movimiento is None:
-                    print("IA terminó el juego.")
+                    print("IA terminó el juego.") 
+                    print("\n\nPresiona una tecla para continuar...")
+                    msvcrt.getch()
                     break
                 self.colocar_pieza_ia(movimiento)

@@ -17,7 +17,7 @@ class JugadorGreedy:
 
         movimientos = tablero.obtener_movimientos_relevantes(radio=2)
         if not movimientos:
-            movimientos = tablero.obtener_movimientos_validos()  # fallback si no hay movimientos cercanos
+            movimientos = tablero.obtener_movimientos_validos() 
 
         for fila, col in movimientos:
             tablero.colocar(fila, col, self.color)
@@ -36,9 +36,9 @@ class JugadorGreedy:
 
     def Greedy(self, tablero: Tablero, profundidad: int, es_maximizador: bool, alfa: float, beta: float) -> float:
         if tablero.verificar_ganador(self.color):
-            return 1000000  # Muy alto si gana
+            return 1000000
         elif tablero.verificar_ganador(self.oponente):
-            return -1000000  # Muy bajo si pierde
+            return -1000000
         elif profundidad == 0 or tablero.esta_lleno():
             return evaluar_tablero(tablero, self.color)
 
@@ -52,7 +52,7 @@ class JugadorGreedy:
                 max_eval = max(max_eval, eval)
                 alfa = max(alfa, eval)
                 if beta <= alfa:
-                    break  # poda beta
+                    break
             return max_eval
         else:
             min_eval = float('inf')
@@ -64,5 +64,5 @@ class JugadorGreedy:
                 min_eval = min(min_eval, eval)
                 beta = min(beta, eval)
                 if beta <= alfa:
-                    break  # poda alfa
+                    break
             return min_eval

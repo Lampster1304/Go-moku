@@ -5,7 +5,7 @@ import msvcrt
 class Humano:
     def __init__(self, color):
         self.color = color
-        self.cursor = [7, 7]  # Centro del tablero
+        self.cursor = [7, 7] 
 
     def leer_tecla(self):
         tecla = msvcrt.getch()
