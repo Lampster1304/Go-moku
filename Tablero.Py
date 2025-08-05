@@ -1,3 +1,5 @@
+# Tablero.py
+
 import numpy as np
 from referencia import VACIO, NEGRO, BLANCO, SIMBOLOS
 
@@ -14,6 +16,20 @@ class Tablero:
 
     def obtener_movimientos_validos(self):
         return [(r, c) for r in range(self.tamanio) for c in range(self.tamanio) if self.grid[r, c] == VACIO]
+    
+    def obtener_movimientos_relevantes(self, radio=2):
+        posiciones = []
+        for r in range(self.tamanio):
+            for c in range(self.tamanio):
+                if self.grid[r, c] != VACIO:
+                    for dr in range(-radio, radio + 1):
+                        for dc in range(-radio, radio + 1):
+                            nr, nc = r + dr, c + dc
+                            if 0 <= nr < self.tamanio and 0 <= nc < self.tamanio:
+                                if self.grid[nr, nc] == VACIO:
+                                    posiciones.append((nr, nc))
+        return list(set(posiciones))
+
 
     def esta_lleno(self):
         return not (self.grid == VACIO).any()

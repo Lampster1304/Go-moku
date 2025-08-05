@@ -1,6 +1,6 @@
 from referencia import NEGRO, BLANCO
 from Tablero import Tablero
-import copy
+from heuristicas.Heuristicas_set import evaluar_tablero
 
 class JugadorMinimax:
     def __init__(self, color, profundidad=2):
@@ -8,18 +8,21 @@ class JugadorMinimax:
         self.profundidad = profundidad
         self.oponente = BLANCO if color == NEGRO else NEGRO
 
-    def obtener_mejor_movimiento(self, tablero: Tablero):
-        print("Minimax con poda está calculando movimiento...")
-
+    def obtener_movimiento(self, tablero: Tablero):
+        print("IA Minimax (con heurística) está pensando...")
         mejor_valor = float('-inf')
         mejor_movimiento = None
         alfa = float('-inf')
         beta = float('inf')
 
-        for fila, col in tablero.obtener_movimientos_validos():
-            tablero_copia = copy.deepcopy(tablero)
-            tablero_copia.colocar_piedra(fila, col, self.color)
-            valor = self.minimax(tablero_copia, self.profundidad - 1, False, alfa, beta)
+        movimientos = tablero.obtener_movimientos_relevantes(radio=2)
+        if not movimientos:
+            movimientos = tablero.obtener_movimientos_validos()  # fallback si no hay movimientos cercanos
+
+        for fila, col in movimientos:
+            tablero.colocar(fila, col, self.color)
+            valor = self.minimax(tablero, self.profundidad - 1, False, alfa, beta)
+            tablero.deshacer(fila, col)
 
             if valor > mejor_valor:
                 mejor_valor = valor
@@ -27,39 +30,38 @@ class JugadorMinimax:
 
             alfa = max(alfa, mejor_valor)
 
-        print("Mejor movimiento elegido:", mejor_movimiento)
+        print("Minimax eligió:", mejor_movimiento, "con puntuación:", mejor_valor)
         return mejor_movimiento
 
-    def minimax(self, tablero, profundidad, es_maximizador, alfa, beta):
+    def minimax(self, tablero: Tablero, profundidad: int, es_maximizador: bool, alfa: float, beta: float) -> float:
         if tablero.verificar_ganador(self.color):
-            return 10
+            return 1000000  # Muy alto si gana
         elif tablero.verificar_ganador(self.oponente):
-            return -10
-        elif tablero.esta_lleno() or profundidad == 0:
-            return 0
+            return -1000000  # Muy bajo si pierde
+        elif profundidad == 0 or tablero.esta_lleno():
+            return evaluar_tablero(tablero, self.color)
 
         if es_maximizador:
-            mejor_valor = float('-inf')
-            for fila, col in tablero.obtener_movimientos_validos():
-                tablero_copia = copy.deepcopy(tablero)
-                tablero_copia.colocar_piedra(fila, col, self.color)
-                valor = self.minimax(tablero_copia, profundidad - 1, False, alfa, beta)
-                mejor_valor = max(mejor_valor, valor)
-                alfa = max(alfa, valor)
-                if beta <= alfa:
-                    break  # Poda beta
-            return mejor_valor
-        else:
-            mejor_valor = float('inf')
-            for fila, col in tablero.obtener_movimientos_validos():
-                tablero_copia = copy.deepcopy(tablero)
-                tablero_copia.colocar_piedra(fila, col, self.oponente)
-                valor = self.minimax(tablero_copia, profundidad - 1, True, alfa, beta)
-                mejor_valor = min(mejor_valor, valor)
-                beta = min(beta, valor)
-                if beta <= alfa:
-                    break  # Poda alfa
-            return mejor_valor
+            max_eval = float('-inf')
+            for fila, col in tablero.obtener_movimientos_relevantes(radio=2):
+                tablero.colocar(fila, col, self.color)
+                eval = self.minimax(tablero, profundidad - 1, False, alfa, beta)
+                tablero.deshacer(fila, col)
 
-    def obtener_movimiento(self, tablero: Tablero):
-        return self.obtener_mejor_movimiento(tablero)
+                max_eval = max(max_eval, eval)
+                alfa = max(alfa, eval)
+                if beta <= alfa:
+                    break  # poda beta
+            return max_eval
+        else:
+            min_eval = float('inf')
+            for fila, col in tablero.obtener_movimientos_relevantes(radio=2):
+                tablero.colocar(fila, col, self.oponente)
+                eval = self.minimax(tablero, profundidad - 1, True, alfa, beta)
+                tablero.deshacer(fila, col)
+
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta <= alfa:
+                    break  # poda alfa
+            return min_eval

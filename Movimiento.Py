@@ -26,7 +26,28 @@ class Movimiento:
             self.jugador1 = Humano(NEGRO)
             self.jugador2 = JugadorMinimax(BLANCO)
         
-        # Otros modos se agregan aquí
+        elif self.modo == "II_MINIMAX_GREEDY":
+            from Jugadores.Minimax import JugadorMinimax
+            from Jugadores.Greedy import JugadorGreedy
+            self.jugador1 = JugadorGreedy(NEGRO)
+            self.jugador2 = JugadorMinimax(BLANCO)
+
+        elif self.modo == "II_MINIMAX_MALA":
+            from Jugadores.Minimax import JugadorMinimax
+            from Jugadores.Mala import JugadorMalo
+            self.jugador1 = JugadorMalo(NEGRO)
+            self.jugador2 = JugadorMinimax(BLANCO)
+
+        elif self.modo == "II_MINIMAX_RANDOM":
+            from Jugadores.Minimax import JugadorMinimax
+            from Jugadores.Random import JugadorRandom
+            self.jugador1 = JugadorRandom(NEGRO)
+            self.jugador2 = JugadorMinimax(BLANCO)
+
+        elif self.modo == "II_MINIMAX_MINIMAX":
+            from Jugadores.Minimax import JugadorMinimax
+            self.jugador1 = JugadorMinimax(NEGRO)
+            self.jugador2 = JugadorMinimax(BLANCO)
 
     def limpiar_pantalla(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -34,7 +55,7 @@ class Movimiento:
     def mostrar_tablero(self):
         self.limpiar_pantalla()
         print("Usa flechas para mover cursor, espacio o enter para colocar pieza, Q para salir.")
-        print(f"Turno de: {'⚫ Negro' if self.jugador_actual == NEGRO else '⚪ Blanco'}\n")
+        print(f"Turno de: {'⚪ Blanco' if self.jugador_actual == NEGRO else '⚫ Negro'}\n")
 
         for fila in range(self.TAMANIO):
             fila_str = ""
@@ -92,7 +113,7 @@ class Movimiento:
     def verificar_estado_post_movimiento(self):
         if self.tablero.verificar_ganador(self.jugador_actual):
             self.mostrar_tablero()
-            ganador = "⚫ Negro" if self.jugador_actual == NEGRO else "⚪ Blanco"
+            ganador = "⚪ Blanco" if self.jugador_actual == NEGRO else "⚫ Negro"
             print(f"¡{ganador} gana!")
             self.running = False
         elif self.tablero.esta_lleno():

@@ -1,41 +1,35 @@
 from Movimiento import Movimiento
 from Jugadores.Humano import Humano
 from Jugadores.Minimax import JugadorMinimax
-# Puedes importar más IAs después aquí...
-
-def mostrar_menu():
-    print("🧠🎮 Bienvenido a Go-Moku 🎮🧠")
-    print("Selecciona un modo de juego:")
-    print("1. Humano vs Humano")
-    print("2. Humano vs IA Minimax")
-    print("3. IA Minimax vs IA Greedy")
-    print("4. IA Minimax vs IA Mala")
-    print("5. IA Minimax vs IA Random")
-    print("6. Salir")
+from Jugadores.Greedy import JugadorGreedy
+from Jugadores.Mala import JugadorMalo
+from Jugadores.Random import JugadorRandom
+from Menu_interactivo import mostrar_menu_interactivo
 
 def ejecutar_modo(modo):
-    if modo == "1":
+    if modo == 1:
         juego = Movimiento(modo="HH")
-        juego.jugar()
-    elif modo == "2":
+    elif modo == 2:
         juego = Movimiento(modo="HI")
-        juego.jugar()
-    elif modo == "3":
+    elif modo == 3:
         juego = Movimiento(modo="II_MINIMAX_GREEDY")
-        juego.jugar()
-    elif modo == "4":
+    elif modo == 4:
         juego = Movimiento(modo="II_MINIMAX_MALA")
-        juego.jugar()
-    elif modo == "5":
+    elif modo == 5:
         juego = Movimiento(modo="II_MINIMAX_RANDOM")
-        juego.jugar()
+    elif modo == 6:
+        juego = Movimiento(modo="II_MINIMAX_MINIMAX")
     else:
         print("Saliendo del juego...")
+        return
+
+    juego.jugar()
 
 if __name__ == "__main__":
     while True:
-        mostrar_menu()
-        opcion = input("Elige una opción (1-6): ")
-        if opcion == "6":
+        opcion = mostrar_menu_interactivo()
+        if opcion == 7:  # Salir
+            print("\nGracias por jugar. ¡Hasta la próxima!\n")
             break
         ejecutar_modo(opcion)
+
